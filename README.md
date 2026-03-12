@@ -58,4 +58,4 @@ npm run report
 
 - Telegram: @ssrjkk
 - Email: ray013lefe@gmail.com
-- GitHub: github.com/ssrjkk
+- GitHub: https://github.com/ssrjkk
