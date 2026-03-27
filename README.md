@@ -1,6 +1,6 @@
 # HH.ru Test Framework - Playwright + TypeScript
 
-> QA Automation Engineer | Playwright | TypeScript | API & UI Testing
+> QA Automation Engineer - Playwright - TypeScript - API & UI Testing
 > Saint Petersburg
 
 ## Stack
