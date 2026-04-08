@@ -15,4 +15,4 @@ export { expect, apiTest };
 export { DataFactory, ResponseValidator };
 
 export type { APIRequestContext };
-export type { IApiFactory } from '../api/api.factory';
+export type { IApiFactory } from './api/api.factory';

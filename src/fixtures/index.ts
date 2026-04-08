@@ -1,5 +1,5 @@
 import { test as base, Page, APIRequestContext } from '@playwright/test';
-import { ApiFactory, IApiFactory } from '../api/api.factory';
+import { createApiFactory, IApiFactory } from '../api/api.factory';
 import { DataFactory, IUserData, ITodoData } from '../data/data.factory';
 import { IUser } from '../types/api.types';
 

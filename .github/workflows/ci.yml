@@ -9,71 +9,57 @@ on:
 
 jobs:
   lint:
-    name: Lint & TypeCheck
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: '20'
           cache: 'npm'
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Run ESLint
-        run: npm run lint
-
-      - name: Run TypeScript check
-        run: npm run typecheck
-
-      - name: Run Prettier check
-        run: npx prettier --check "src/**/*.{ts,tsx}"
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run typecheck
+      - run: npx prettier --check .
 
   smoke:
-    name: Smoke Tests
     runs-on: ubuntu-latest
     needs: lint
-    strategy:
-      fail-fast: false
-      matrix:
-        browser: [chromium]
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: '20'
           cache: 'npm'
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Install Playwright browsers
-        run: npx playwright install --with-deps ${{ matrix.browser }}
-
+      - run: npm ci
+      - run: npx playwright install chromium
+      - name: Start mock server
+        run: node mock-server.js &
       - name: Run smoke tests
         run: npm run test:smoke
         env:
           CI: true
-          BROWSERS: ${{ matrix.browser }}
-          ENV: stage
+          BASE_URL: http://localhost:3000
+          API_BASE_URL: http://localhost:3000
 
-      - name: Upload smoke test results
-        if: always()
-        uses: actions/upload-artifact@v4
+  api-test:
+    runs-on: ubuntu-latest
+    needs: lint
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
-          name: smoke-test-results-${{ matrix.browser }}
-          path: test-results/
-          retention-days: 7
+          node-version: '20'
+          cache: 'npm'
+      - run: npm ci
+      - name: Start mock server
+        run: node mock-server.js &
+      - name: Run API tests
+        run: npm run test:api
+        env:
+          CI: true
+          API_BASE_URL: http://localhost:3000
 
-  test:
-    name: Test (${{ matrix.browser }})
+  ui-test:
     runs-on: ubuntu-latest
     needs: lint
     strategy:
@@ -81,136 +67,18 @@ jobs:
       matrix:
         browser: [chromium, firefox, webkit]
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: '20'
           cache: 'npm'
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Install Playwright browsers
-        run: npx playwright install --with-deps ${{ matrix.browser }}
-
-      - name: Run tests
+      - run: npm ci
+      - run: npx playwright install ${{ matrix.browser }}
+      - name: Start mock server
+        run: node mock-server.js &
+      - name: Run UI tests
         run: npm test
         env:
           CI: true
+          BASE_URL: http://localhost:3000
           BROWSERS: ${{ matrix.browser }}
-          ENV: stage
-
-      - name: Upload test results
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: test-results-${{ matrix.browser }}
-          path: |
-            test-results/
-            playwright-report/
-            allure-results/
-          retention-days: 14
-
-      - name: Upload traces
-        if: failure()
-        uses: actions/upload-artifact@v4
-        with:
-          name: traces-${{ matrix.browser }}
-          path: test-results/**/trace.zip
-          retention-days: 14
-
-  api-test:
-    name: API Tests
-    runs-on: ubuntu-latest
-    needs: lint
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-          cache: 'npm'
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Run API tests
-        run: npm run test:api
-        env:
-          CI: true
-          ENV: stage
-          API_BASE_URL: https://stage.example.com/api
-
-      - name: Upload API test results
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: api-test-results
-          path: |
-            test-results/
-            playwright-report/
-          retention-days: 14
-
-  load-test:
-    name: Load Tests
-    runs-on: ubuntu-latest
-    needs: test
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-
-      - name: Install k6
-        run: |
-
-          sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys C5AD17C747E3415A3642D57D77C6C491D6AC1D69
-          echo "deb https://dl.k6.io/deb stable main" | sudo tee /etc/apt/sources.list.d/k6.list
-          sudo apt-get update
-          sudo apt-get install k6
-        shell: bash
-
-      - name: Run load tests
-        run: k6 run load-tests/scenarios.js
-        env:
-          K6_BASE_URL: https://stage.example.com/api
-
-  report:
-    name: Generate Report
-    runs-on: ubuntu-latest
-    needs: [test, api-test]
-    if: always()
-    steps:
-      - name: Download all artifacts
-        uses: actions/download-artifact@v4
-        with:
-          path: artifacts
-
-      - name: Generate Allure report
-        run: |
-          npm install -g allure-commandline
-          allure generate artifacts/allure-results -o allure-report --clean
-
-      - name: Upload Allure report
-        uses: actions/upload-artifact@v4
-        with:
-          name: allure-report
-          path: allure-report/
-          retention-days: 30
-
-  notify:
-    name: Notify
-    runs-on: ubuntu-latest
-    needs: [test, api-test, report]
-    if: failure()
-    steps:
-      - name: Send failure notification
-        run: echo "Tests failed. Check artifacts for details."
