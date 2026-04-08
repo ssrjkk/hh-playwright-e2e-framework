@@ -16,7 +16,7 @@ jobs:
         with:
           node-version: '20'
           cache: 'npm'
-      - run: npm ci
+      - run: npm install
       - run: npm run lint
       - run: npm run typecheck
       - run: npx prettier --check .
@@ -30,7 +30,7 @@ jobs:
         with:
           node-version: '20'
           cache: 'npm'
-      - run: npm ci
+      - run: npm install
       - run: npx playwright install chromium
       - name: Start mock server
         run: node mock-server.js &
@@ -50,7 +50,7 @@ jobs:
         with:
           node-version: '20'
           cache: 'npm'
-      - run: npm ci
+      - run: npm install
       - name: Start mock server
         run: node mock-server.js &
       - name: Run API tests
@@ -72,7 +72,7 @@ jobs:
         with:
           node-version: '20'
           cache: 'npm'
-      - run: npm ci
+      - run: npm install
       - run: npx playwright install ${{ matrix.browser }}
       - name: Start mock server
         run: node mock-server.js &
