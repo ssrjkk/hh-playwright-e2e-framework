@@ -42,28 +42,36 @@ const registerHTML = `
 </body>
 </html>`;
 
-const todosHTML = `
+const todosHTML = (todos = []) => `
 <!DOCTYPE html>
 <html>
 <head><title>Todos</title></head>
 <body>
   <h1>Todos</h1>
   <input placeholder="What needs to be done" id="new-todo" />
-  <div class="todo-list"></div>
+  <div class="todo-list">
+    ${todos.map(t => `
+      <div class="todo-item" data-id="${t.id}">
+        <input type="checkbox" ${t.completed ? 'checked' : ''} />
+        <span>${t.title}</span>
+        <button class="delete">×</button>
+      </div>
+    `).join('')}
+  </div>
   <div class="filters">
     <button class="filter-all">All</button>
     <button class="filter-active">Active</button>
     <button class="filter-completed">Completed</button>
   </div>
   <button class="clear-completed">Clear completed</button>
-  <div class="todo-count"></div>
-  <div class="empty-state" style="display:none">No todos</div>
+  <div class="todo-count">${todos.length} items left</div>
+  <div class="empty-state" style="display:${todos.length === 0 ? 'block' : 'none'}">No todos</div>
 </body>
 </html>`;
 
 app.get('/login', (req, res) => res.send(loginHTML));
 app.get('/register', (req, res) => res.send(registerHTML));
-app.get('/todos', (req, res) => res.send(todosHTML));
+app.get('/todos', (req, res) => res.send(todosHTML(Array.from(todos.values()))));
 app.get('/', (req, res) => res.send('<html><body><a href="/login">Login</a> | <a href="/todos">Todos</a></body></html>'));
 
 app.post('/api/auth/register', (req, res) => {
