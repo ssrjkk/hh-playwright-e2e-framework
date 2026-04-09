@@ -1,6 +1,6 @@
 # E2E Test Framework - Playwright + TypeScript
 
-Макет приложения для тестирования E2E с API layer, Page Objects, CI/CD.
+Фреймворк для тестирования E2E с API layer, Page Objects, CI/CD.
 
 ## Stack
 
