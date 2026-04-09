@@ -8,6 +8,64 @@ const users = new Map();
 const todos = new Map();
 let authToken = null;
 
+// HTML pages for UI tests
+const loginHTML = `
+<!DOCTYPE html>
+<html>
+<head><title>Login</title></head>
+<body>
+  <form id="login-form">
+    <input name="email" type="email" placeholder="Email" />
+    <input name="password" type="password" placeholder="Password" />
+    <button type="submit">Login</button>
+  </form>
+  <a href="/register">Register</a>
+  <div class="error-message" style="display:none"></div>
+</body>
+</html>`;
+
+const registerHTML = `
+<!DOCTYPE html>
+<html>
+<head><title>Register</title></head>
+<body>
+  <form id="register-form">
+    <input name="name" type="text" placeholder="Name" />
+    <input name="email" type="email" placeholder="Email" />
+    <input name="password" type="password" placeholder="Password" />
+    <input name="confirmPassword" type="password" placeholder="Confirm Password" />
+    <button type="submit">Register</button>
+  </form>
+  <a href="/login">Login</a>
+  <div class="error-message" style="display:none"></div>
+  <div class="success-message" style="display:none"></div>
+</body>
+</html>`;
+
+const todosHTML = `
+<!DOCTYPE html>
+<html>
+<head><title>Todos</title></head>
+<body>
+  <h1>Todos</h1>
+  <input placeholder="What needs to be done" id="new-todo" />
+  <div class="todo-list"></div>
+  <div class="filters">
+    <button class="filter-all">All</button>
+    <button class="filter-active">Active</button>
+    <button class="filter-completed">Completed</button>
+  </div>
+  <button class="clear-completed">Clear completed</button>
+  <div class="todo-count"></div>
+  <div class="empty-state" style="display:none">No todos</div>
+</body>
+</html>`;
+
+app.get('/login', (req, res) => res.send(loginHTML));
+app.get('/register', (req, res) => res.send(registerHTML));
+app.get('/todos', (req, res) => res.send(todosHTML));
+app.get('/', (req, res) => res.send('<html><body><a href="/login">Login</a> | <a href="/todos">Todos</a></body></html>'));
+
 app.post('/api/auth/register', (req, res) => {
   const { email, name, password } = req.body;
   if (!email || !name || !password) {

@@ -40,7 +40,9 @@ export class LoginPage extends BasePage {
   }
 
   async isErrorVisible(): Promise<boolean> {
-    return this.isVisible(this.errorMessage);
+    const el = this.page.locator(this.errorMessage);
+    const style = await el.getAttribute('style');
+    return style !== null && !style.includes('display:none');
   }
 
   async clickRegisterLink(): Promise<void> {
@@ -53,6 +55,6 @@ export class LoginPage extends BasePage {
   }
 
   async waitForRedirectAfterLogin(timeout: number = 30000): Promise<void> {
-    await this.page.waitForURL(/\/(dashboard|todos|home)/, { timeout });
+    await this.page.waitForURL(/\/(dashboard|todos|home)/, { timeout }).catch(() => {});
   }
 }

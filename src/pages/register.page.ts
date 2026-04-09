@@ -53,11 +53,15 @@ export class RegisterPage extends BasePage {
   }
 
   async isErrorVisible(): Promise<boolean> {
-    return this.isVisible(this.errorMessage);
+    const el = this.page.locator(this.errorMessage);
+    const style = await el.getAttribute('style');
+    return style !== null && !style.includes('display:none');
   }
 
   async isSuccessVisible(): Promise<boolean> {
-    return this.isVisible(this.successMessage);
+    const el = this.page.locator(this.successMessage);
+    const style = await el.getAttribute('style');
+    return style !== null && !style.includes('display:none');
   }
 
   async clickLoginLink(): Promise<void> {
