@@ -71,6 +71,13 @@ app.post('/api/auth/register', (req, res) => {
   if (!email || !name || !password) {
     return res.status(422).json({ message: 'Missing required fields' });
   }
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) {
+    return res.status(400).json({ message: 'Invalid email format' });
+  }
+  if (password.length < 8 || !/[A-Z]/.test(password) || !/[0-9]/.test(password)) {
+    return res.status(400).json({ message: 'Password too weak' });
+  }
   if (users.has(email)) {
     return res.status(400).json({ message: 'Email already exists' });
   }
@@ -94,7 +101,7 @@ app.post('/api/auth/login', (req, res) => {
 
 app.get('/api/auth/me', (req, res) => {
   const authHeader = req.headers.authorization;
-  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+  if (!authHeader || !authHeader.startsWith('Bearer ') || !authHeader.includes(' ')) {
     return res.status(401).json({ message: 'Unauthorized' });
   }
   res.json({ id: '1', email: 'test@test.com', name: 'Test User' });

@@ -71,7 +71,7 @@ export class TodosPage extends BasePage {
     await deleteBtn.click().catch(() => {});
   }
 
-  async editTodo(oldTitle: string, newTitle: string): Promise<void> {
+  async editTodo(_oldTitle: string, _newTitle: string): Promise<void> {
     // Not implemented in mock
   }
 
@@ -93,7 +93,7 @@ export class TodosPage extends BasePage {
 
   async isTodoVisible(todoTitle: string): Promise<boolean> {
     const item = this.page.locator(this.todoItem).filter({ hasText: todoTitle });
-    return item.count() > 0;
+    return (await item.count()) > 0;
   }
 
   async isEmptyStateVisible(): Promise<boolean> {
