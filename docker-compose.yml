@@ -1,77 +1,25 @@
 version: '3.8'
 
 services:
-  app:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    environment:
-      - ENV=dev
-      - BASE_URL=http://localhost:3000
-      - API_BASE_URL=http://localhost:3000/api
-      - CI=true
-      - BROWSERS=chromium
-    volumes:
-      - ./test-results:/app/test-results
-      - ./playwright-report:/app/playwright-report
-      - ./allure-results:/app/allure-results
-    shm_size: 2gb
-    mem_limit: 2g
-    cpus: 2
-
-  app-stage:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    environment:
-      - ENV=stage
-      - BASE_URL=https://stage.example.com
-      - API_BASE_URL=https://stage.example.com/api
-      - CI=true
-      - BROWSERS=chromium,firefox
-    volumes:
-      - ./test-results:/app/test-results
-      - ./playwright-report:/app/playwright-report
-    shm_size: 2gb
-    mem_limit: 4g
-    cpus: 4
-
-  app-smoke:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    command: npm run test:smoke
-    environment:
-      - ENV=stage
-      - BASE_URL=https://stage.example.com
-      - CI=true
-      - BROWSERS=chromium
-    volumes:
-      - ./test-results:/app/test-results
-
-  selenium-hub:
-    image: selenium/hub:4.15.0
+  mock-server:
+    image: node:20-alpine
+    working_dir: /app
+    command: node mock-server.js
     ports:
-      - '4444:4444'
-    environment:
-      - GRID_MAX_SESSION=16
-      - GRID_BROWSER_TIMEOUT=300
-      - GRID_TIMEOUT=300
+      - "3000:3000"
+    volumes:
+      - .:/app
 
-  chrome:
-    image: selenium/node-chrome:4.15.0
+  tests:
+    build: .
     depends_on:
-      - selenium-hub
+      - mock-server
     environment:
-      - SE_EVENT_BUS_HOST=selenium-hub
-      - SE_EVENT_BUS_PUBLISH_PORT=4442
-      - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
-
-  firefox:
-    image: selenium/node-firefox:4.15.0
-    depends_on:
-      - selenium-hub
-    environment:
-      - SE_EVENT_BUS_HOST=selenium-hub
-      - SE_EVENT_BUS_PUBLISH_PORT=4442
-      - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
+      - CI=true
+      - BASE_URL=http://mock-server:3000
+      - API_BASE_URL=http://mock-server:3000
+      - BROWSERS=chromium
+    command: npm test
+    volumes:
+      - ./test-results:/app/test-results
+      - ./playwright-report:/app/playwright-report

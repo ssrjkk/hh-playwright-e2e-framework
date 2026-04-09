@@ -1,61 +1,67 @@
-# HH.ru Test Framework - Playwright + TypeScript
+# E2E Test Framework - Playwright + TypeScript
 
-> QA Automation Engineer - Playwright - TypeScript - API & UI Testing
-> Saint Petersburg
+Mock application for E2E testing with API layer, Page Objects, and CI/CD.
 
 ## Stack
 
-- Playwright 1.43
-- TypeScript 5.4
+- Playwright 1.42
+- TypeScript 5.3
 - Node.js 20
 
 ## Structure
 
-| Path | Description |
-|------|-------------|
-| `helpers/api-client.ts` | Typed API client with interfaces |
-| `pages/` | Page Object Model for UI tests |
-| `fixtures/` | Custom Playwright fixtures |
-| `tests/api/` | API tests: vacancies, areas, dictionaries |
-| `tests/ui/` | UI tests via browser |
-| `tests/integration/` | End-to-end flow tests |
-| `test-data/` | Search queries, area IDs, constants |
+```
+src/
+├── api/              # API layer
+│   ├── base.api.ts   # Base class with request wrapper
+│   ├── auth.api.ts  # Auth endpoints
+│   ├── users.api.ts # Users endpoints
+│   ├── todos.api.ts # Todos endpoints
+│   └── api.factory.ts
+├── pages/            # Page Objects
+│   ├── base.page.ts
+│   ├── login.page.ts
+│   ├── register.page.ts
+│   └── todos.page.ts
+├── fixtures/         # Playwright fixtures
+├── helpers/          # Logger, validators
+├── data/             # DataFactory for test data
+├── types/            # TypeScript interfaces
+└── tests/
+    ├── api/          # API tests
+    └── ui/           # UI tests
+```
 
 ## Run
 
 ```bash
 npm install
-npx playwright install chrome
+npx playwright install chromium
 
+# Start mock server
+node mock-server.js
+
+# Run tests
 npm test
-npm run test:api
-npm run test:ui
 npm run test:smoke
-npm run report
+npm run test:regression
+npm run test:report
 ```
 
-## What is tested
+## Test Tags
 
-**API**
-- Vacancies search with filters: area, experience, per_page
-- Vacancy detail returns all required fields
-- Non-existent vacancy returns 404
-- Response time under 3000ms
-- Dictionaries: experience, employment structure
-- Areas: Russia and Saint Petersburg exist
+- `@smoke` - Critical smoke tests
+- `@regression` - Full regression suite
+- `@api` - API tests
+- `@e2e` - UI tests
+- `@critical` - Must pass in CI
 
-**UI**
-- Search page loads correctly
-- Search returns vacancy cards
-- Vacancy titles are visible
+## CI/CD
 
-**Integration**
-- Search then get vacancy detail - data is consistent
-- Area ID from /areas works in /vacancies filter
-- Experience from /dictionaries works as search filter
+GitHub Actions workflow runs on every push to main/develop.
 
-## Contacts
+## Docker
 
-- Telegram: @ssrjkk
-- Email: ray013lefe@gmail.com
-- GitHub: https://github.com/ssrjkk
+```bash
+npm run docker:compose
+```
