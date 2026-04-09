@@ -64,7 +64,7 @@ export class BasePage {
 
   protected async waitForSelector(
     selector: string,
-    options?: { state?: 'visible' | 'hidden' | 'attached'; timeout?: number },
+    _options?: { state?: 'visible' | 'hidden' | 'attached'; timeout?: number },
   ): Promise<Locator> {
     return this.page.locator(selector).first();
   }

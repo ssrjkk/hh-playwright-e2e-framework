@@ -69,7 +69,7 @@ uiTest.describe('UI: Auth', () => {
 });
 
 uiTest.describe('UI: Todos', () => {
-  uiTest.beforeEach(async ({ todosPage, registerPage }) => {
+  uiTest.beforeEach(async ({ registerPage }) => {
     const user = DataFactory.generateUser();
 
     await registerPage.navigate();

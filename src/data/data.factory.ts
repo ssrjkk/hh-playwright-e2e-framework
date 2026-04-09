@@ -106,7 +106,6 @@ export const DataFactory = {
   generateUser: (overrides?: Partial<IUserData>): IUserData => {
     const firstName = DataFactory.generateFirstName();
     const lastName = DataFactory.generateLastName();
-    const timestamp = Date.now();
 
     return {
       email: DataFactory.generateEmail(),

@@ -38,7 +38,7 @@ interface AuthFixtures {
 
 declare global {
   namespace PlaywrightTest {
-    interfaceFixtures extends PageFixtures, ApiFixtures, TestDataFixtures, AuthFixtures {}
+    interface Fixtures extends PageFixtures, ApiFixtures, TestDataFixtures, AuthFixtures {}
   }
 }
 
