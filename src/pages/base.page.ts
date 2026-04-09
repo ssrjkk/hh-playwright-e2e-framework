@@ -1,7 +1,7 @@
 import { Page, Locator, FrameLocator } from '@playwright/test';
 
 export class BasePage {
-  protected page: Page;
+  public page: Page;
   protected baseURL: string;
 
   constructor(page: Page, baseURL: string = '') {
@@ -51,7 +51,7 @@ export class BasePage {
   }
 
   protected async getText(selector: string): Promise<string> {
-    return this.page.textContent(selector) || '';
+    return (await this.page.textContent(selector)) ?? '';
   }
 
   protected async isVisible(selector: string): Promise<boolean> {

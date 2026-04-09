@@ -121,7 +121,7 @@ export class BaseApi {
     });
   }
 
-  protected handleError(response: APIResponse): IApiError {
+  protected async handleError(response: APIResponse): Promise<IApiError> {
     const statusCode = response.status();
     let message = 'Unknown error';
     let code = 'UNKNOWN_ERROR';
@@ -135,7 +135,7 @@ export class BaseApi {
         details = (body as Record<string, unknown>).details as Record<string, unknown> | undefined;
       }
     } catch {
-      message = response.text() || message;
+      message = (await response.text()) || message;
     }
 
     return { message, code, statusCode, details };

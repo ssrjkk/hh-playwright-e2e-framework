@@ -104,7 +104,7 @@ export class TodosPage extends BasePage {
     await this.page.click(this.filterCompleted);
   }
 
-  async clearCompleted(): Promise<void> {
+  async clearCompletedTodos(): Promise<void> {
     await this.page.click(this.clearCompleted);
   }
 

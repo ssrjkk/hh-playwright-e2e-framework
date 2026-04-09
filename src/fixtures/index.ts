@@ -34,6 +34,7 @@ interface TestDataFixtures {
 interface AuthFixtures {
   testUser: TestUser;
   authenticatedUser: AuthenticatedUser;
+  api: IApiFactory;
 }
 
 export const testDataFixture = base.extend<TestDataFixtures>({

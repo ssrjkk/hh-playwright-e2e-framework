@@ -147,7 +147,7 @@ uiTest.describe('UI: Todos', () => {
     await todosPage.addTodo(todo.title);
     await todosPage.toggleTodo(todo.title);
 
-    await todosPage.clearCompleted();
+    await todosPage.clearCompletedTodos();
 
     const count = await todosPage.getTodoCount();
     expect(count).toBe(0);
