@@ -1,6 +1,6 @@
 # E2E Test Framework - Playwright + TypeScript
 
-Mock application for E2E testing with API layer, Page Objects, and CI/CD.
+Макет приложения для тестирования E2E с API layer, Page Objects, CI/CD.
 
 ## Stack
 
@@ -12,24 +12,24 @@ Mock application for E2E testing with API layer, Page Objects, and CI/CD.
 
 ```
 src/
-├── api/              # API layer
-│   ├── base.api.ts   # Base class with request wrapper
-│   ├── auth.api.ts  # Auth endpoints
-│   ├── users.api.ts # Users endpoints
-│   ├── todos.api.ts # Todos endpoints
+├── api/               # API layer
+│   ├── base.api.ts    # Base class with request wrapper
+│   ├── auth.api.ts    # Auth endpoints
+│   ├── users.api.ts   # Users endpoints
+│   ├── todos.api.ts   # Todos endpoints
 │   └── api.factory.ts
-├── pages/            # Page Objects
+├── pages/             # Page Objects
 │   ├── base.page.ts
 │   ├── login.page.ts
 │   ├── register.page.ts
 │   └── todos.page.ts
-├── fixtures/         # Playwright fixtures
-├── helpers/          # Logger, validators
-├── data/             # DataFactory for test data
-├── types/            # TypeScript interfaces
+├── fixtures/          # Playwright fixtures
+├── helpers/           # Logger, validators
+├── data/              # DataFactory for test data
+├── types/             # TypeScript interfaces
 └── tests/
-    ├── api/          # API tests
-    └── ui/           # UI tests
+    ├── api/           # API tests
+    └── ui/            # UI tests
 ```
 
 ## Run
