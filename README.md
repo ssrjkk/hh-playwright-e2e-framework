@@ -65,7 +65,8 @@ GitHub Actions workflow runs on every push to main/develop.
 ```bash
 npm run docker:compose
 ```
-Contacts
+## Contacts
+
 Telegram: @ssrjkk
 Email: ray013lefe@gmail.com
 GitHub: https://github.com/ssrjkk
