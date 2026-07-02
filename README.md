@@ -1,4 +1,4 @@
-# E2E Test Framework - Playwright + TypeScript By ssrjkk
+# hh-playwright By ssrjkk
 
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.3-blue?logo=typescript&logoColor=white)
 ![Playwright](https://img.shields.io/badge/Playwright-1.42-green?logo=playwright&logoColor=white)
@@ -6,10 +6,6 @@
 ![Docker](https://img.shields.io/badge/Docker-ready-blue?logo=docker&logoColor=white)
 ![CI](https://github.com/ssrjkk/hh-playwright-e2e-framework/actions/workflows/ci.yml/badge.svg)
 ![License](https://img.shields.io/badge/license-MIT-yellow)
-
-> 🎯 170+ E2E-тестов | ⚡ Параллельный запуск: 4x быстрее | 🔄 UI <-> API валидация | 🛡 Flaky <1%
-
-Фреймворк демонстрирует архитектуру автотестов с разделением слоёв, стабильными ожиданиями и интеграцией в CI/CD.
 
 ## Stack
 
